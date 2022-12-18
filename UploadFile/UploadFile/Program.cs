@@ -12,7 +12,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton< Microsoft.AspNetCore.Session.ISessionStore>();
 
-
 builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
