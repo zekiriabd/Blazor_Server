@@ -1,0 +1,102 @@
+﻿@inject IUserService _UserService
+
+<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+    <div class="modal-dialog" role="document">
+        @if (selectedUser == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <EditForm Model="@selectedUser" OnSubmit="@SaveUser">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@ModalTitle</h5>
+            </div>
+            <div class="modal-body">
+                
+                    
+                    <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            <InputText class="form-control" @bind-Value="selectedUser.FirstName" />
+                    </div>
+                    <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            <InputText class="form-control" @bind-Value="selectedUser.LastName" />
+                    </div>
+                    <div class="mb-3">
+                            <label class="form-label">Age</label>
+                            <InputNumber class="form-control" @bind-Value="selectedUser.Age" />
+                    </div>
+
+                   
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Close">Close</button>
+            </div>
+        </div>
+        </EditForm>
+        }        
+    </div>
+</div>
+
+
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+
+        [Parameter] public EventCallback OnCloseUserEditModale { get; set; }
+
+
+    private UserDetail? selectedUser { get; set; }
+    private string? ModalTitle { get; set; }
+
+    public Guid Guid = Guid.NewGuid();
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+
+    public async Task Open(int Id)
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        selectedUser = Id > 0 ? await _UserService.GetUserByIdAsync(Id) : new UserDetail();
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ModalTitle = (selectedUser != null && selectedUser.UserId > 0) ? "Update User" : "New User";
+    }
+
+    private async Task SaveUser()
+    {
+        if (selectedUser.UserId > 0)
+        {
+            await _UserService.UpdateUserAsync(selectedUser);
+        }
+        else
+        {
+            await _UserService.AddUserAsync(selectedUser);
+        }
+
+        OnCloseUserEditModale.InvokeAsync();
+        Close();
+    }
+
+    
+}

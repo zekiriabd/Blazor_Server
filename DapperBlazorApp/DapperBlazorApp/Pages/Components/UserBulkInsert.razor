@@ -1,0 +1,96 @@
+﻿@inject IUserService _UserService
+
+<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+    <div class="modal-dialog" role="document">
+
+        @if (TempUsers == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+        <EditForm Model="@TempUsers" OnSubmit="@SaveUser">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User List To Insert</h5>
+            </div>
+            <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><button type="button" class="btn btn-primary" @onclick="AddEmptyUser">+</button></th>
+                                    <th>FirstName</th>
+                                    <th>LastName</th>
+                                    <th>Age</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@TempUsers" Context="user">
+                                    <tr>
+                                        <td></td>
+                                        <td><InputText class="form-control" @bind-Value="user.FirstName" /></td>
+                                        <td><InputText class="form-control" @bind-Value="user.LastName" /></td>
+                                        <td><InputNumber class="form-control" @bind-Value="user.Age" /></td>
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Close">Close</button>
+                    </div>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code 
+{
+
+    [Parameter] public EventCallback OnCloseUserEditModale { get; set; }
+
+    private List<UserDetail> TempUsers { get; set; }
+
+    public Guid Guid = Guid.NewGuid();
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+
+    public async Task Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        TempUsers = new List<UserDetail>();
+        AddEmptyUser();
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+    private async Task AddEmptyUser()
+    {
+        TempUsers.Add(new UserDetail() { FirstName = string.Empty, LastName = string.Empty, Age = 0 });
+    }
+
+    private async Task SaveUser()
+    {
+        await _UserService.AddUsersAsync(TempUsers);
+        OnCloseUserEditModale.InvokeAsync();
+        Close();
+    }
+}

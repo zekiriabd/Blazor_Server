@@ -1,0 +1,66 @@
+﻿@page "/"
+@inject IUserService _UserService
+
+<PageTitle>User List</PageTitle>
+
+<h1>User List</h1>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    
+    <button type="button" class="btn btn-primary" @onclick="() => UserEditModal.Open(-1)">New User</button>
+    <button type="button" class="btn btn-success" @onclick="() => UserBulkInsertModal.Open()">Bulk Insert</button>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Id</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Items="@users" Context="user">
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="()=>DeleteUser(user.UserId)">Delete</button>
+                        <button type="button" class="btn btn-info" @onclick="() => UserEditModal.Open(user.UserId)">Update</button>
+                    </td>
+                    <td>@user.UserId</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                </tr>
+            </Virtualize>
+        </tbody>
+    </table>
+
+    <UserEdit @ref="UserEditModal" OnCloseUserEditModale="GetUsers" />
+    <UserBulkInsert @ref="UserBulkInsertModal" OnCloseUserEditModale="GetUsers" />
+}
+
+@code {
+    private User[]? users { get; set; }
+    private UserEdit? UserEditModal { get; set; }
+    private UserBulkInsert? UserBulkInsertModal { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsers();
+    }
+
+    private async Task GetUsers()
+    {
+        users = (await _UserService.GetUsersAsync()).ToArray();
+    }
+
+    private async Task DeleteUser(int id)
+    {
+        await _UserService.DeleteUserAsync(id);
+        await GetUsers();
+    }
+}
