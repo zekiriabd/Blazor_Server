@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using ;
 using UploadFile.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton< Microsoft.AspNetCore.Session.ISessionStore>();
 
 builder.Services.AddSingleton<WeatherForecastService>();
 

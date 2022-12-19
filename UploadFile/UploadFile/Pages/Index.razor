@@ -1,5 +1,4 @@
 ﻿@page "/"
-@inject HttpContext httpContext
 <PageTitle>UploadFile</PageTitle>
 
 <InputFile OnChange="@LoadFiles" multiple />
@@ -12,8 +11,7 @@
 
     private async void LoadFiles(InputFileChangeEventArgs e)
     {
-        httpContext.Session.SetString("Mykey","Mystring");
-
+        
         var imageFile = await e.File.RequestImageFileAsync("image/png", maxWidth: 1024, maxHeight: 1024);
         using (FileStream fileStream = new($"c:\\MyImages\\{e.File.Name}", FileMode.Create))
         {
