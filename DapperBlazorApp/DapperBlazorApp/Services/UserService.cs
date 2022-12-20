@@ -21,7 +21,7 @@ namespace DapperBlazorApp.Services
             using var db = new SqlConnection(con);
             //await db.ExecuteAsync("Insert Into [User] (FirstName,LastName,Age) VALUES (@FirstName,@LastName,@Age)", user);
             await db.ExecuteAsync("AddUser", new { user.FirstName, user.LastName, user.Age }, commandType: CommandType.StoredProcedure);
-        }       
+        }
 
         public async Task DeleteUserAsync(int UserId)
         {
@@ -51,24 +51,22 @@ namespace DapperBlazorApp.Services
             //await db.ExecuteAsync("Update [UserDetail] Set FirstName = @FirstName, LastName = @LastName, Age = @Age Where UserId = @UserId", user);
             await db.ExecuteAsync("UpdateUserById",
                 new { user.UserId, user.FirstName, user.LastName, user.Age },
-                commandType: CommandType.StoredProcedure);                        
+                commandType: CommandType.StoredProcedure);
         }
 
         public async Task AddUsersAsync(string CategoryName, List<UserDetail> users)
         {
             using var db = new SqlConnection(con);
             if (db.State == ConnectionState.Closed) db.Open();
-                
-
             var transaction = db.BeginTransaction();
             try
             {
-                int newId = await db.QueryFirstAsync<int>("AddCategory", new { CategoryName },  transaction, commandType: CommandType.StoredProcedure);
+                int newId = await db.QueryFirstAsync<int>("AddCategory", new { CategoryName }, transaction, commandType: CommandType.StoredProcedure);
                 users = users.Select(c => { c.CategoryId = newId; return c; }).ToList();
                 await db.ExecuteAsync("Insert Into [User] (FirstName,LastName,Age,CategoryId) VALUES (@FirstName,@LastName,@Age,@CategoryId)", users, transaction);
                 transaction.Commit();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 transaction.Rollback();
             }
@@ -91,7 +89,7 @@ namespace DapperBlazorApp.Services
         }
 
 
-        }
+    }
 }
 
 /*
