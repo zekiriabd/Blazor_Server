@@ -11,10 +11,10 @@
 }
 else
 {
-    
+
     <button type="button" class="btn btn-primary" @onclick="() => UserEditModal.Open(-1)">New User</button>
     <button type="button" class="btn btn-success" @onclick="() => UserBulkInsertModal.Open()">Bulk Insert</button>
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -35,6 +35,29 @@ else
                     <td>@user.FirstName</td>
                     <td>@user.LastName</td>
                 </tr>
+                @if (@user.Roles.Where(x=>x != null).Any())
+                {
+                    <tr>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@user.Roles" Context="role">
+                                    <tr>
+                                        <td>@role.id</td>
+                                        <td>@role.Name</td>
+                                    </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                </tr>
+                }
+
             </Virtualize>
         </tbody>
     </table>
@@ -55,7 +78,7 @@ else
 
     private async Task GetUsers()
     {
-        users = (await _UserService.GetUsersAsync()).ToArray();
+        users = (await _UserService.GetUsersWithRolesAsync()).ToArray();
     }
 
     private async Task DeleteUser(int id)

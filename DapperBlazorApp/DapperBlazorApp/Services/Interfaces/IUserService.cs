@@ -10,10 +10,11 @@ namespace DapperBlazorApp.Services.Interfaces
         Task DeleteUserAsync(int id);
         
         Task AddUserAsync(UserDetail user);       
-        Task AddUsersAsync(List<UserDetail> users);
+        Task AddUsersAsync(string CategoryName, List<UserDetail> users);
 
         Task UpdateUserAsync(UserDetail user);
         
+        Task<IEnumerable<User>> GetUsersWithRolesAsync();
 
     }
 }

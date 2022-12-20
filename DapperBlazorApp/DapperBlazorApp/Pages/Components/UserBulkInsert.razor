@@ -15,6 +15,7 @@
                 <h5 class="modal-title">User List To Insert</h5>
             </div>
             <div class="modal-body">
+                        <InputText class="form-control" @bind-Value="CategoryName" />
                         <table class="table">
                             <thead>
                                 <tr>
@@ -58,6 +59,7 @@
     [Parameter] public EventCallback OnCloseUserEditModale { get; set; }
 
     private List<UserDetail> TempUsers { get; set; }
+    private string CategoryName { get; set; } = "";
 
     public Guid Guid = Guid.NewGuid();
     public string ModalDisplay = "none;";
@@ -89,7 +91,7 @@
 
     private async Task SaveUser()
     {
-        await _UserService.AddUsersAsync(TempUsers);
+        await _UserService.AddUsersAsync(CategoryName,TempUsers);
         OnCloseUserEditModale.InvokeAsync();
         Close();
     }
