@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+
+@inject NavigationManager _NavigationManager
+
+<PageTitle>LoginDemoBlazorServer</PageTitle>
+<AuthorizeView>
+<Authorized>
+    <div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+    <RadzenDialog />
+    <RadzenNotification />
+    <RadzenContextMenu />
+    <RadzenTooltip />
+</Authorized>
+<NotAuthorized>
+@{
+   _NavigationManager.NavigateTo("/login", true);
+}
+</NotAuthorized>
+</AuthorizeView>

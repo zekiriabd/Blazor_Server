@@ -16,5 +16,8 @@ namespace DapperBlazorApp.Services.Interfaces
         
         Task<IEnumerable<User>> GetUsersWithRolesAsync();
 
+        Task<IEnumerable<Category>> GetCategoriesWithUsersWithRolesAsync();
+
+
     }
 }

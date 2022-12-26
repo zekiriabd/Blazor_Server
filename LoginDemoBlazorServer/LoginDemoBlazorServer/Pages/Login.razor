@@ -1,0 +1,49 @@
+﻿@page "/login"
+@using LoginDemoBlazorServer.Data;
+@using LoginDemoBlazorServer.Services.Login;
+@inject NavigationManager _NavigationManager
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+
+@layout AuthLayout
+<div class="container-fluid">
+    <div class="row d-flex px-3">
+        <div class="col-xl-6 d-flex p-3">
+            <label class="text-danger">@ErrorMessage</label>
+            <RadzenCard class="p-5 w-100">
+                <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="mb-4">
+                    Simple login
+                </RadzenText>
+                <RadzenTemplateForm Data=@("SimpleLogin") >
+                    <RadzenLogin AllowRegister="false" AllowResetPassword="false" Login=@(e => OnLogin(e, "Simple login")) />
+                </RadzenTemplateForm>
+            </RadzenCard>
+        </div>
+    </div>
+</div>
+
+@code {
+    private UserState? CurrentUser;
+    private string ErrorMessage { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        CurrentUser = new UserState();
+        return base.OnInitializedAsync();
+    }
+
+
+    private async Task OnLogin(LoginArgs e, string name)
+    {
+        CurrentUser.Login = e.Username;
+        CurrentUser.Password = e.Password;
+
+        if (await ((AuthStatProviderService)_AuthenticationStateProvider).MarkUserAsAuthenticated(CurrentUser))
+        {
+            _NavigationManager?.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = "Erreur du login ou du mot de passe";
+        }
+    }
+}

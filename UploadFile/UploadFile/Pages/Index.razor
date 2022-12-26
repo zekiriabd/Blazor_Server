@@ -1,25 +1,77 @@
 ﻿@page "/"
 <PageTitle>UploadFile</PageTitle>
 
-<InputFile OnChange="@LoadFiles" multiple />
+<style>
+    .dropzone {
+        position: relative;
+        overflow: hidden;
+        border: 2px dotted rgba(0,0,0,.2);
+        background-color: rgba(0,0,0,.09);
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+        .dropzone.dropzone-active {
+            background-color: #878388;
+        }
+</style>
+
+<div class="row">
+    <div class="dropzone @dropClass">
+    <InputFile OnChange="@LoadFiles"
+            @ondragenter="HandleDragEnter"
+            @ondragleave="HandleDragLeave"
+            disabled="@isUploading"
+            style="width:100%;height:200px;position:relative;top:-36px;margin-bottom:-40px;" />
+        <label>@fileName</label>
+    </div>
+    <div class="col-md-4 p-3">
+        <RadzenProgressBar Value="@Value" Mode="ProgressBarMode.Indeterminate" />
+    </div>
+    <InputFile OnChange="@LoadFiles"  />
+</div>
+
+<br />
+<br />
 <img src="@imageUrl" width="700px" height="500px" />
 
 @code{
+    private string dropClass { get; set; }
+    private bool isUploading { get; set; } = false;
     private string imageUrl { get; set; }
+    private string fileName { get; set; }
+    private int Value { get
+        {
+            return isUploading ? 100 : 0;
+        } }
 
-    
 
     private async void LoadFiles(InputFileChangeEventArgs e)
     {
-        
+        isUploading = true;
+        fileName = e.File.Name;
+        StateHasChanged();
+
+        Task.Delay(5000).Wait();
         var imageFile = await e.File.RequestImageFileAsync("image/png", maxWidth: 1024, maxHeight: 1024);
         using (FileStream fileStream = new($"c:\\MyImages\\{e.File.Name}", FileMode.Create))
         {
             await imageFile.OpenReadStream().CopyToAsync(fileStream);
-            
             imageUrl = $"http://localimages.net/{e.File.Name}";
-            this.StateHasChanged();
         }
+        fileName = string.Empty;
+        isUploading = false;
+        StateHasChanged();
     }
+
+    void HandleDragEnter()
+    {
+        dropClass = "dropzone-active";
+    }
+    void HandleDragLeave()
+    {
+        dropClass = string.Empty;
+    }
+   
 
 }

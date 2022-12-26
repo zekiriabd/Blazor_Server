@@ -4,6 +4,7 @@ using DapperBlazorApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.Json;
 using System.Transactions;
 
 namespace DapperBlazorApp.Services
@@ -58,6 +59,7 @@ namespace DapperBlazorApp.Services
         {
             using var db = new SqlConnection(con);
             if (db.State == ConnectionState.Closed) db.Open();
+
             var transaction = db.BeginTransaction();
             try
             {
@@ -87,6 +89,20 @@ namespace DapperBlazorApp.Services
                                                });
             return userRoles.Distinct();
         }
+
+        public async Task<IEnumerable<Category>> GetCategoriesWithUsersWithRolesAsync()
+        {
+            using var db = new SqlConnection(con);
+            string? jsonCategorys = await db.QueryFirstAsync<string>(@"SELECT *
+                                                        FROM [Category] as Categories
+                                                        left join [User] as Users on (Categories.CategoryId = Users.CategoryId)
+                                                        left join [Role] as Roles  on (Roles.UserId = Users.UserId) 
+                                                        FOR JSON AUTO");
+            Category[] result = JsonSerializer.Deserialize<Category[]>(jsonCategorys);
+            return result;
+        }
+
+
 
 
     }

@@ -73,12 +73,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        //await _UserService.GetCategoriesWithUsersWithRolesAsync();
         await GetUsers();
     }
 
     private async Task GetUsers()
     {
         users = (await _UserService.GetUsersWithRolesAsync()).ToArray();
+
     }
 
     private async Task DeleteUser(int id)
