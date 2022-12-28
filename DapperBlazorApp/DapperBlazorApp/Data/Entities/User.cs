@@ -1,6 +1,8 @@
+using Radzen.Blazor;
+
 namespace DapperBlazorApp.Data.Entities
 {
-
+   
     public class Category
     {
         public int CategoryId { get; set; }

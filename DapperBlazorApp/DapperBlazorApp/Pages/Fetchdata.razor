@@ -1,0 +1,76 @@
+@page "/fetchdata"
+@using Microsoft.Extensions.Localization;
+@using Sylvan.Data.Excel;
+@using System.Data.Common;
+
+@inject DialogService DialogService
+
+@inject IJSRuntime JS
+@inject IUserService _UserService
+@inject NavigationManager navigationManager
+@inject IStringLocalizer<Resource> _StringLocalizer
+
+<h1>@_StringLocalizer["FirstName"]</h1>
+
+<PageTitle>User List</PageTitle>
+<h1>User List</h1>
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenButton Click=@(() => UserEditModal.Open(-1)) Text="New User" ButtonStyle="ButtonStyle.Primary" />
+    <RadzenButton Click=@(() => UserBulkInsertModal.Open()) Text="Bulk Insert" ButtonStyle="ButtonStyle.Success" />
+    <br /><br />
+
+    <RzDataGrid AllowFiltering="true" 
+         AllowColumnResize="true" 
+         AllowAlternatingRows="false" 
+         FilterMode="FilterMode.Advanced" 
+         AllowSorting="true" 
+         PageSize="5" 
+         AllowPaging="true" 
+         PagerHorizontalAlign="HorizontalAlign.Left" 
+         ShowPagingSummary="true"
+         LogicalFilterOperator="LogicalFilterOperator.Or"
+         ColumnWidth="300px" 
+         Data="@users" TItem="User" >
+        <Columns>
+             <RadzenDataGridColumn TItem="User" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="30%" TextAlign="TextAlign.Center" >
+                <Template Context="user">
+                     <RadzenButton Click=@(()=>DeleteUser(user.UserId)) Text="Delete" ButtonStyle="ButtonStyle.Danger" />
+                     <RadzenButton Click=@(()=>UserEditModal.Open(user.UserId)) Text="Update" ButtonStyle="ButtonStyle.Info"  />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="User" Property="UserId" Title="Id" Width="10%" />
+            <RadzenDataGridColumn TItem="User" Property="FirstName" Title="@_StringLocalizer["FirstName"]" Width="30%" />
+            <RadzenDataGridColumn TItem="User" Property="LastName" Title="LastName" Width="30%" />
+        </Columns>
+    </RzDataGrid>
+
+    <UserEdit @ref="UserEditModal" OnCloseUserEditModale="GetUsers" />
+    <UserBulkInsert @ref="UserBulkInsertModal" OnCloseUserEditModale="GetUsers" />
+}
+
+@code {
+    private IEnumerable<User>? users { get; set; }
+    private UserEdit? UserEditModal { get; set; }
+    private UserBulkInsert? UserBulkInsertModal { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsers();
+    }
+
+    private async Task GetUsers()
+    {
+        users = (await _UserService.GetUsersWithRolesAsync());
+    }
+
+    private async Task DeleteUser(int id)
+    {
+        await _UserService.DeleteUserAsync(id);
+        await GetUsers();
+    }
+}

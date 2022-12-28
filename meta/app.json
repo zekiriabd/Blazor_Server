@@ -1,0 +1,20 @@
+{
+  "dataSources": [
+    "testx"
+  ],
+  "generator": "@radzen/blazor-server",
+  "https": false,
+  "layouts": [
+    "Login",
+    "Main"
+  ],
+  "logo": "",
+  "name": "test",
+  "navigation": [],
+  "pages": [],
+  "serverLang": "cs",
+  "serverProject": true,
+  "serverVersion": "6",
+  "startPage": null,
+  "theme": "standard"
+}
