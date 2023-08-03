@@ -1,0 +1,45 @@
+﻿@page "/"
+@using BlazorMapMarcker.Data;
+
+<style>
+    #container {
+        position: relative;
+    }
+
+    .cityMarker {
+        background: url("/img/marker.png");
+        background-repeat: no-repeat;
+        position: absolute;
+        height: 55px;
+        width: 55px;
+    }
+</style>
+
+<div id="container" class="col-6">
+    <img id="imgMap" src="/img/dz.png" alt="Alg" usemap="#image-map">
+
+    <map name="image-map">
+        <area onclick="alert('111111')"
+            coords="668,562,619,371,464,407,419,544,436,758,524,909,661,883,863,717,855,665" shape="poly">
+    </map>
+
+   @* @foreach (var p in Points){
+        <div class="cityMarker" 
+            title="@p.Comment" 
+            style=@($"top:{p.Y}px;left:{p.X}px;")>
+        </div>
+    }*@
+</div>
+@code {
+    private List<MPoint> Points { get; set; }
+   
+    protected override async Task OnInitializedAsync()
+    {
+        Points = new(){
+            new MPoint(){ Id=1,X= 370, Y= 40 ,Comment="11111111111"},
+            new MPoint(){ Id=3,X= 420, Y= 200 ,Comment="122222222"},
+            new MPoint(){ Id=2,X= 680, Y= 160 ,Comment="مدرسة باشا - مدرسة واحة السيليكون - مدرسة ابن الهيثم"},
+            new MPoint(){ Id=2,X= 640, Y= 260 ,Comment="4444444444"},
+        };
+    }
+}

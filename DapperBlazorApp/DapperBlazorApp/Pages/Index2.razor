@@ -1,0 +1,61 @@
+﻿@page "/"
+
+<div id="main" class="container-fluid">
+
+    <input placeholder="Something todo" @bind="newTodo" />
+    <button @onclick="AddTodo" class="btn btn-success">Add</button>
+
+    <hr />
+    <table>
+        <Dropzone Items="MyToDoList" TItem="TodoItem" OnItemDrop="@((e)=>OnReplacedItemDrop(e))">
+            @{
+                context.Rank = i;
+            }
+            <tr>
+                <td>@context.Title</td>
+                <td>@context.Rank</td>
+            </tr>
+            @{
+                i ++;
+             }
+        </Dropzone>
+    </table>
+
+</div>
+
+@code{
+    private int i = 1;
+    private string newTodo;
+
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            MyToDoList.Add(new TodoItem { Title = newTodo });
+            newTodo = string.Empty;
+        }
+    }
+
+    public void OnReplacedItemDrop(TodoItem item)
+    {
+        i = 1 - (MyToDoList.Count() * 2);
+        var x = item;
+        // replacedItem = item;
+       // StateHasChanged();
+    }
+
+    public List<TodoItem> MyToDoList = new List<TodoItem>()
+    {
+            new TodoItem(){Title = "Drag this item"},
+            new TodoItem(){Title = "Add another item"},
+            new TodoItem(){Title = "Remove this item"},
+            new TodoItem(){Title = "Style this list"},
+            new TodoItem(){Title = "Fix a bug"},
+            new TodoItem(){Title = "Build a feature"},
+            new TodoItem(){Title = "dffd"},
+            new TodoItem(){Title = "Creghhghg"},
+            new TodoItem(){Title = "CreavbvbvbR"},
+            new TodoItem(){Title = "zzzzzzzzzz a PR"},
+    };
+
+}
