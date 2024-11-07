@@ -1,0 +1,54 @@
+﻿@page "/questionnaire/{Id:int}"
+<PageTitle>Questionnaire</PageTitle>
+
+@if (SelectedQuestionnaire != null)
+
+{
+
+    <h1>@SelectedQuestionnaire.Libelle</h1>
+    <div class="row">
+        <div class="col-3">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <form>
+                        @foreach (var question in SelectedQuestionnaire.Questions)
+                        {
+                            var lbClass = question.IsImportant ? "bold" : "";
+                            @switch (question.TypeQuestionId)
+                            {
+
+                                case (int)QUESTION_TYPE.Checkbox:
+                                    <div class="form-check p-0 mt-3">
+                                        <_Checkbox @bind-SelectedValue="@question.Valeur" QuestionId="@question.Id" />
+                                        <label for="@($"Question_{question.Id}")" class="@lbClass">@question.Libelle</label>
+                                    </div>
+                                    break;
+
+                                case (int)QUESTION_TYPE.Inputtext:
+                                    <div class="form-group mt-3">
+                                        <label for="@($"Question_{question.Id}")" class="@lbClass">@question.Libelle</label>
+                                        <RadzenTextBox class="w-100" @bind-Value=@question.Valeur Name="@($"Question_{question.Id}")" />
+                                    </div>
+                                    break;
+
+                                case (int)QUESTION_TYPE.Selectlist:
+                                    <div class="form-group mt-3">
+                                        <label for="@($"Question_{question.Id}")" class="@lbClass">@question.Libelle</label>
+                                        <_DropDown @bind-SelectedValue="@question.Valeur" QuestionId="@question.Id" ListeChoix="@(question.ListeChoix)" />
+                                    </div>
+                                    break;
+
+                            }
+                        }
+                    </form>
+
+                    <RadzenButton Text="Mettre à jour" class="w-100 mt-5" Click="Save" />
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            @Result
+        </div>
+    </div>
+    
+}

@@ -1,0 +1,18 @@
+﻿<RadzenCheckBox @bind-Value=@_selectedValue Name="@($"Question_{QuestionId}")" />
+
+@code {
+    [Parameter] public string SelectedValue { get; set; }
+    [Parameter] public int QuestionId { get; set; }
+
+    private bool _selectedValue
+    {
+        get => string.IsNullOrEmpty(SelectedValue) ? false : Convert.ToBoolean(SelectedValue);
+        set
+        {
+            if (SelectedValue == value.ToString()) return;
+            SelectedValue = value.ToString();
+            SelectedValueChanged.InvokeAsync(SelectedValue);
+        }
+    }
+    [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
+}

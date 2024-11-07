@@ -1,0 +1,67 @@
+﻿[
+  {
+    "Id": 1,
+    "Libelle": "Questionnaire 1",
+    "Questions": [
+      {
+        "Id": 1,
+        "Libelle": "Question 1",
+        "TypeQuestionId": 1,
+        "Valeur": "True",
+        "IsImportant": true,
+        "ListeChoix": []
+      },
+      {
+        "Id": 2,
+        "Libelle": "Question 2",
+        "TypeQuestionId": 2,
+        "Valeur": "Valeur 2",
+        "IsImportant": false,
+        "ListeChoix": []
+      },
+      {
+        "Id": 3,
+        "Libelle": "Question 3",
+        "TypeQuestionId": 3,
+        "Valeur": "3",
+        "IsImportant": true,
+        "ListeChoix": [
+          {
+            "Id": 1,
+            "Libelle": "Choix 1"
+          },
+          {
+            "Id": 2,
+            "Libelle": "Choix 2"
+          },
+          {
+            "Id": 3,
+            "Libelle": "Choix 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "Libelle": "Questionnaire 2",
+    "Questions": [
+      {
+        "Id": 21,
+        "Libelle": "Question 21",
+        "TypeQuestionId": 1,
+        "Valeur": "False",
+        "IsImportant": true,
+        "ListeChoix": []
+      },
+      {
+        "Id": 22,
+        "Libelle": "Question 22",
+        "TypeQuestionId": 2,
+        "Valeur": "Valeur 2",
+        "IsImportant": false,
+        "ListeChoix": []
+      }
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+﻿<RadzenDropDown @bind-Value=@_selectedValue Data=@ListeChoix TextProperty="Libelle"
+                ValueProperty="Id" Multiple=false class="w-100" Name="@($"Question_{QuestionId}")" />
+@code {
+    [Parameter] public string SelectedValue { get; set; }
+    [Parameter] public int QuestionId { get; set; }
+    [Parameter] public IEnumerable<ListeChoixModel> ListeChoix { get; set; }
+
+    private int? _selectedValue
+    {
+        get => string.IsNullOrEmpty(SelectedValue) ? null : Convert.ToInt32(SelectedValue);
+        set
+        {
+            if (SelectedValue == value.ToString()) return;
+            SelectedValue = value.ToString();
+            SelectedValueChanged.InvokeAsync(SelectedValue);
+        }
+    }
+
+    [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
+}
+
+
