@@ -39,6 +39,14 @@
             "Libelle": "Choix 3"
           }
         ]
+      },
+      {
+        "Id": 4,
+        "Libelle": "Question 4",
+        "TypeQuestionId": 2,
+        "Valeur": "",
+        "IsImportant": true,
+        "ListeChoix": []
       }
     ]
   },
